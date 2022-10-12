@@ -1,5 +1,9 @@
 const express = require('express'); //traigo express
+
+//Cors
 const cors = require('cors'); //traigo cors
+
+//Mogoose
 const mongoose = require('mongoose'); //traigo mongose
 mongoose
   .connect(
@@ -8,12 +12,13 @@ mongoose
   .then(() => {
     console.log('Conectado a la base de datos');
   }); //conecto a la base de datos
+
 const app = express();
 app.use(cors()); //uso cors
 
 //importar body-parser
-const bodyParser = require('body-parser');
-app.use(bodyParser.json());
+const bodyParser = require('body-parser'); //traigo body-parser
+app.use(bodyParser.json()); //y lo pongo en uso
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const Worker = require('./models/Workers'); //traigo el modelo de workers
@@ -21,7 +26,7 @@ const Movements = require('./models/Movements'); //traigo el modelo de movements
 
 const port = 3000; //declaro el puerto y lo pongo a escuchar
 app.listen(port, () => {
-  console.log(`Escuchando en el puerto ${port}`);
+  console.log(`Escuchando el puerto ${port}`);
 });
 
 //variables globales
@@ -68,9 +73,13 @@ app.get('/API/worker/:id', (req, res) => {
 
 //funcion que traiga a todos los workers de la base de datos Sistema_pagos y los entrega en json
 app.get('/API/workers', (req, res) => {
-  Worker.find().then((workers) => {
-    res.json(workers);
-  });
+  Worker.find()
+    .then((workers) => {
+      res.json(workers);
+    })
+    .catch((err) => {
+      res.json({ message: err });
+    });
 });
 
 //funcion para agregar un worker a la base de datos
@@ -80,9 +89,14 @@ app.post('/API/workers', (req, res) => {
     name: req.body.name,
     role: req.body.role,
   });
-  worker.save().then((worker) => {
-    res.json({ message: 'Trabajador agregado' });
-  });
+  worker
+    .save()
+    .then((worker) => {
+      res.json({ message: 'Trabajador agregado' });
+    })
+    .then((err) => {
+      res.json({ message: err });
+    });
 });
 
 //funcion para editar un worker de la base de datos
