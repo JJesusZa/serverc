@@ -73,13 +73,9 @@ app.get('/API/worker/:id', (req, res) => {
 
 //funcion que traiga a todos los workers de la base de datos Sistema_pagos y los entrega en json
 app.get('/API/workers', (req, res) => {
-  Worker.find()
-    .then((workers) => {
-      res.json(workers);
-    })
-    .catch((err) => {
-      res.json({ message: err });
-    });
+  Worker.find().then((workers) => {
+    res.json(workers);
+  });
 });
 
 //funcion para agregar un worker a la base de datos
@@ -89,14 +85,9 @@ app.post('/API/workers', (req, res) => {
     name: req.body.name,
     role: req.body.role,
   });
-  worker
-    .save()
-    .then((worker) => {
-      res.json({ message: 'Trabajador agregado' });
-    })
-    .then((err) => {
-      res.json({ message: err });
-    });
+  worker.save().then((worker) => {
+    res.json({ message: 'Trabajador agregado' });
+  });
 });
 
 //funcion para editar un worker de la base de datos
