@@ -85,8 +85,22 @@ app.post('/API/workers', (req, res) => {
     name: req.body.name,
     role: req.body.role,
   });
-  worker.save().then((worker) => {
-    res.json({ message: 'Trabajador agregado' });
+  //recorro el array de workers y si el numero de cliente ya existe no lo agrego
+  Worker.find().then((workers) => {
+    let exists = false;
+    workers.forEach((element) => {
+      if (element.n_client == req.body.n_client) {
+        exists = true;
+      }
+    });
+    if (exists) {
+      //responder con un error 400
+      res.status(400).json({ message: 'El numero de cliente ya existe' });
+    } else {
+      worker.save().then((worker) => {
+        res.json({ message: 'Trabajador agregado' });
+      });
+    }
   });
 });
 
